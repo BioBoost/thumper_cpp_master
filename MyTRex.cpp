@@ -26,7 +26,7 @@ namespace TRexLib{
         int result;
         do {
             result = i2c->read(this->i2cAddress, buffer, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
-            wait(0.02);
+            wait(0.01);
         } //while (++i < 5 && (result != StatusDataPacket::SIZE_STATUS_DATA_PACKET || buffer[STATUS_START] != 0x0F));
         while (++i < 5 && buffer[STATUS_START] != 0x0F);
 
@@ -54,7 +54,7 @@ namespace TRexLib{
         int result;
         do {
             result = i2c->read(this->i2cAddress, status, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
-            wait(0.02);
+            wait(0.01);
         } while (++i < 5 && status[STATUS_START] != 0x0F);
 
         //return (result == StatusDataPacket::SIZE_STATUS_DATA_PACKET);
@@ -85,9 +85,8 @@ namespace TRexLib{
             return false;
         }
 
-        int i = 0;
         int result = i2c->write(this->i2cAddress, command, CommandDataPacket::SIZE_TREX_DATA_PACKET);
 
-        return true;
+        return (result == 0);
     }
 }

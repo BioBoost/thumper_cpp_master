@@ -39,11 +39,10 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < CommandDataPacket::SIZE_TREX_DATA_PACKET; i++) {
             command[i] = atoi(argv[3+i]);
         }
-
-        trex.writeCommand(command, CommandDataPacket::SIZE_TREX_DATA_PACKET);
-        TRexLib::wait(0.02);
         
-        // Read the status        
+        // Write the command and read the status
+        trex.writeCommand(command, CommandDataPacket::SIZE_TREX_DATA_PACKET);
+        TRexLib::wait(0.01);
         trex.readStatus(status, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
 
         // Return status
