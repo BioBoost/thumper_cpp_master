@@ -1,4 +1,8 @@
 #include "MyStatusDataPacket.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
+using namespace rapidjson;
 
 namespace TRexLib{
 
@@ -15,7 +19,67 @@ namespace TRexLib{
      * @return json string
      */
     std::string MyStatusDataPacket::toJSON(void){
-        return "";
+        StringBuffer s;
+        Writer<StringBuffer> writer(s);
+    
+        writer.StartObject();
+        
+        writer.String("errors");
+        writer.StartObject();
+            writer.String("start_byte");
+            writer.Bool(this->getErrorFlags() & 1);
+            writer.String("pwm_frequency");
+            writer.Bool(this->getErrorFlags() & 2);
+            writer.String("motor_speed");
+            writer.Bool(this->getErrorFlags() & 4);
+            writer.String("servo_position");
+            writer.Bool(this->getErrorFlags() & 8);
+            writer.String("impact_sensitivity");
+            writer.Bool(this->getErrorFlags() & 16);
+            writer.String("low_battery");
+            writer.Bool(this->getErrorFlags() & 32);
+            writer.String("i2c_address");
+            writer.Bool(this->getErrorFlags() & 64);
+            writer.String("i2c_speed");
+            writer.Bool(this->getErrorFlags() & 128);
+        writer.EndObject();
+
+        writer.String("battery_voltage");
+        writer.Double(this->getBatteryVoltage());
+
+        writer.String("motor_current");
+        writer.StartObject();
+            writer.String("left");
+            writer.Double(this->getMotorCurrent(LEFT));
+            writer.String("right");
+            writer.Double(this->getMotorCurrent(RIGHT));
+        writer.EndObject();
+
+        writer.String("encoder_count");
+        writer.StartObject();
+            writer.String("left");
+            writer.Uint(this->getEncoderCount(LEFT));
+            writer.String("right");
+            writer.Uint(this->getEncoderCount(RIGHT));
+        writer.EndObject();
+
+        writer.String("accelero_meter");
+        writer.StartArray();
+            writer.Uint(this->getAcceleroMeter().x);
+            writer.Uint(this->getAcceleroMeter().y);
+            writer.Uint(this->getAcceleroMeter().z);
+        writer.EndArray();
+
+        writer.String("impact");
+        writer.StartArray();
+            writer.Uint(this->getImpact().x);
+            writer.Uint(this->getImpact().y);
+            writer.Uint(this->getImpact().z);
+        writer.EndArray();
+
+        writer.EndObject();
+
+        return s.GetString();
     }
 
     /*
