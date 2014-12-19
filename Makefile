@@ -4,12 +4,13 @@ BINPATH=/home/nico/buildroot/output/host/usr/bin/arm-buildroot-linux-uclibcgnuea
 CC=g++
 
 # Compiler flags
-CFLAGS  = -Wall
+CFLAGS  = -Wall -Wno-write-strings
   #  -Wall turns on most, but not all, compiler warnings
+  # -Wno-write-strings suppresses warning: deprecated conversion from string constant to ‘char*’
 
 
-all: clean I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o MyStatusDataPacket.o TRex.o MyTRex.o main.o 
-	$(CC) $(CFLAGS) I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o MyStatusDataPacket.o TRex.o MyTRex.o main.o -o i2c_pi_trex_master
+all: clean I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o MyStatusDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o 
+	$(CC) $(CFLAGS) I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o MyStatusDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o -o i2c_pi_trex_master
 
 I2C.o: I2C.cpp
 	$(CC) -c $(CFLAGS) I2C.cpp
@@ -34,6 +35,9 @@ TRex.o: TRex.cpp
 
 MyTRex.o: MyTRex.cpp
 	$(CC) -c $(CFLAGS) MyTRex.cpp
+
+TcpDaemon.o: TcpDaemon.cpp
+	$(CC) -c $(CFLAGS) TcpDaemon.cpp
 
 main.o: main.cpp
 	$(CC) -c $(CFLAGS) main.cpp
