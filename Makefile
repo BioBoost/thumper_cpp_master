@@ -9,8 +9,8 @@ CFLAGS  = -Wall -Wno-write-strings
   # -Wno-write-strings suppresses warning: deprecated conversion from string constant to ‘char*’
 
 
-all: clean I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o CommandDataPacket.o MyStatusDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o 
-	$(CC) $(CFLAGS) I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o CommandDataPacket.o MyStatusDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o -o i2c_pi_trex_master
+all: clean I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o CommandDataPacket.o MyStatusDataPacket.o MyCommandDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o 
+	$(CC) $(CFLAGS) I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o CommandDataPacket.o MyStatusDataPacket.o MyCommandDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o -o i2c_pi_trex_master
 
 I2C.o: I2C.cpp
 	$(CC) -c $(CFLAGS) I2C.cpp
@@ -32,6 +32,9 @@ CommandDataPacket.o: CommandDataPacket.cpp
 
 MyStatusDataPacket.o: MyStatusDataPacket.cpp
 	$(CC) -c $(CFLAGS) MyStatusDataPacket.cpp
+
+MyCommandDataPacket.o: MyCommandDataPacket.cpp
+	$(CC) -c $(CFLAGS) MyCommandDataPacket.cpp
 
 TRex.o: TRex.cpp
 	$(CC) -c $(CFLAGS) TRex.cpp
