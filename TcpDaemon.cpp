@@ -2,7 +2,9 @@
 #include "Log.h"
 #include "TRex.h"
 #include "MyStatusDataPacket.h"
+#include "MyCommandDataPacket.h"
 #include "rapidjson/document.h"
+#include "wait.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -11,6 +13,7 @@
 #include <unistd.h>
 
 using namespace rapidjson;
+using namespace std;
 
 #define END_MSG_SEQUENCE "\r\n\r\n"
 
@@ -78,9 +81,6 @@ namespace TRexLib{
      * Listen for incoming connections
      */
     void TcpDaemon::doListen() {
-        // Command and status packets
-        MyStatusDataPacket status;
-
         // Start listening
         while (this->keepListening) {
             // Listen for incomming connections (second param determines 
@@ -113,6 +113,10 @@ namespace TRexLib{
                     this->buffer[total_read_size] = '\0';
 
                     if (end != NULL) {
+                        // Command and status packets
+                        MyStatusDataPacket status;
+                        MyCommandDataPacket command;
+
                         // Full string received, lets do our thing
                         Log::v("Received: %s\r\n", this->buffer);
 
@@ -127,17 +131,28 @@ namespace TRexLib{
                         const char * request = doc["request"].GetString();
                         Log::v("request: %s\r\n", request);
 
-                        // If request == "status" we need to send status of TRex
-                        if (strcmp(request, "status") == 0) {
-                            // Read the status of the device
-                            if (this->trex->readStatus(&status)) {
-                                // Get the json string and send it to the client
-                                const char * status_result = status.toJSON().c_str();
-                                write(client_sock, status_result, strlen(status_result));
-                                Log::d("Read status from TRex: %s\r\n", status_result);
+                        if (strcmp(request, "command") == 0) {
+                            // First populate the command with the json info
+                            string json(buffer);
+                            command.fromJSON(json);
+                            Log::v("Command parsed from JSON: %s\r\n", command.toJSON().c_str());
+                            
+                            // Next we send the command to the trex
+                            if (trex->writeCommand(&command)) {
+                                Log::v("Command send to Trex successfully\r\n");
                             } else {
-                                Log::e("Status read failed\r\n");
+                                Log::e("Command send to Trex failed\r\n");
                             }
+                        }
+
+                        // Read the status of the device
+                        if (this->trex->readStatus(&status)) {
+                            // Get the json string and send it to the client
+                            const char * status_result = status.toJSON().c_str();
+                            write(client_sock, status_result, strlen(status_result));
+                            Log::d("Read status from TRex: %s\r\n", status_result);
+                        } else {
+                            Log::e("Status read failed\r\n");
                         }
                     } else {
                         Log::w("Buffer full\r\n");
