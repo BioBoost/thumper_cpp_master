@@ -25,16 +25,19 @@ namespace TRexLib{
         int i = 0;
         int result;
         do {
+            if (i > 0) {
+                Log::d("Reading status %dth time\r\n. Result = %d", i, result);
+            }
             result = i2c->read(this->i2cAddress, buffer, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
-            wait(0.01);
-        } //while (++i < 5 && (result != StatusDataPacket::SIZE_STATUS_DATA_PACKET || buffer[STATUS_START] != 0x0F));
-        while (++i < 5 && buffer[STATUS_START] != 0x0F);
+            wait(0.02);
+        } while (++i < 5 && (result != StatusDataPacket::SIZE_STATUS_DATA_PACKET || buffer[STATUS_START] != 0x0F));
 
-        // Parse status data from the received buffer
-        status->fromTRex(buffer);
+        if (i < 5) {
+            // Parse status data from the received buffer
+            status->fromTRex(buffer);
+        }
 
-        //return (result == StatusDataPacket::SIZE_STATUS_DATA_PACKET);
-        return buffer[STATUS_START] == 0x0F;
+        return (i < 5);
     }
 
     /*
