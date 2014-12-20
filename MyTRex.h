@@ -25,16 +25,6 @@ namespace TRexLib{
             bool readStatus(StatusDataPacket * status);
 
             /*
-             * Read the RAW status of the TRex controller.
-             *
-             * @status buffer that will be used to store the status frame in
-             * @size size of the buffer (should be big enough to store full frame)
-             *
-             * @return true if the read action was successful
-             */
-            bool readStatus(char * status, int size);
-
-            /*
              * Write command to the TRex controller.
              *
              * @command pointer to the CommandDataPacket that contains the values that should be send to the controller.
@@ -42,16 +32,6 @@ namespace TRexLib{
              * @return true if the write action was successful
              */
             bool writeCommand(CommandDataPacket * command);
-
-            /*
-             * Write RAW coommand frame to the TRex controller.
-             *
-             * @command buffer that contains the command frame that needs to be send to the TRex
-             * @size size of the buffer (should be big enough to store full frame)
-             *
-             * @return true if the write action was successful
-             */
-            bool writeCommand(char * command, int size);
     };
 }
 

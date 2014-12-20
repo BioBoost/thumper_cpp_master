@@ -38,30 +38,6 @@ namespace TRexLib{
     }
 
     /*
-     * Read the RAW status of the TRex controller.
-     *
-     * @status buffer that will be used to store the status frame in
-     * @size size of the buffer (should be big enough to store full frame)
-     *
-     * @return true if the read action was successful
-     */
-    bool MyTRex::readStatus(char * status, int size){
-        if (size < StatusDataPacket::SIZE_STATUS_DATA_PACKET) {
-            return false;
-        }
-
-        int i = 0;
-        int result;
-        do {
-            result = i2c->read(this->i2cAddress, status, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
-            wait(0.01);
-        } while (++i < 5 && status[STATUS_START] != 0x0F);
-
-        //return (result == StatusDataPacket::SIZE_STATUS_DATA_PACKET);
-        return status[STATUS_START] == 0x0F;
-    }
-
-    /*
      * Write command to the TRex controller.
      *
      * @command pointer to the CommandDataPacket that contains the values that should be send to the controller.
@@ -70,23 +46,5 @@ namespace TRexLib{
      */
     bool MyTRex::writeCommand(CommandDataPacket * command){
         return false;
-    }
-
-    /*
-     * Write RAW coommand frame to the TRex controller.
-     *
-     * @command buffer that contains the command frame that needs to be send to the TRex
-     * @size size of the buffer (should be big enough to store full frame)
-     *
-     * @return true if the write action was successful
-     */
-    bool MyTRex::writeCommand(char * command, int size){
-        if (size < CommandDataPacket::SIZE_TREX_DATA_PACKET) {
-            return false;
-        }
-
-        int result = i2c->write(this->i2cAddress, command, CommandDataPacket::SIZE_TREX_DATA_PACKET);
-
-        return (result == 0);
     }
 }
