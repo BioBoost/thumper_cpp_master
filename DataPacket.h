@@ -7,6 +7,9 @@ namespace TRexLib{
 
     class DataPacket{
         public:
+            const static unsigned char START_BYTE = 0x0F;
+
+        public:
         	/*
         	 * Convert the internal values to a JSON string
         	 *

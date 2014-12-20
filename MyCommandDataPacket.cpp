@@ -81,7 +81,7 @@ namespace TRexLib{
         doc.Parse(json.c_str());
 
         // Set the startbyte
-        setStartByte(0x0F);
+        setStartByte(START_BYTE);
 
         // Set the PWM freq
         PWMFrequency freq = (PWMFrequency)(doc["pwm_frequency"].GetInt());
