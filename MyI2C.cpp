@@ -95,7 +95,7 @@ namespace TRexLib{
      * @data buffer to store the byte values received from the device
      * @length number of bytes to read from the device (should be at least size of data buffer)
      *
-     * @return 0 on failure
+     * @return the actual number of bytes read or -1 on failure
      */
     int MyI2C::read(int address, char * data, int length)
     {
@@ -104,6 +104,20 @@ namespace TRexLib{
             Using the read function would lead to a recursive call and a stack overflow.
         */
 
-        return (pi_i2c_read(this->handle, data, length) != length);
+        int bytes_read = 0;
+        int total_bytes_read = 0;
+
+        do {
+            bytes_read = pi_i2c_read(this->handle, data+total_bytes_read, length-total_bytes_read);
+            if (bytes_read != -1) {
+                total_bytes_read += bytes_read;
+            }
+        } while (bytes_read != -1 && total_bytes_read < length);
+
+        if (bytes_read != -1) {
+            return total_bytes_read;
+        } else {
+            return bytes_read;
+        }
     }
 }

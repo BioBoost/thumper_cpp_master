@@ -30,15 +30,15 @@ namespace TRexLib{
              */
 		virtual int write(int address, char * data, int length) = 0;
 
-            /*
-             * Read data from an I2C slave device.
-             *
-             * @address the I2C slave device address (not actually used but kept for compatibility with mbed functions)
-             * @data buffer to store the byte values received from the device
-             * @length number of bytes to read from the device (should be at least size of data buffer)
-             *
-             * @return 0 on failure
-             */
+          /*
+           * Read data from an I2C slave device.
+           *
+           * @address the I2C slave device address (not actually used but kept for compatibility with mbed functions)
+           * @data buffer to store the byte values received from the device
+           * @length number of bytes to read from the device (should be at least size of data buffer)
+           *
+           * @return the actual number of bytes read or -1 on failure
+           */
 		virtual int read(int address, char * data, int length) = 0;
 
         protected:
