@@ -26,7 +26,7 @@ namespace TRexLib{
              * @data buffer containing the bytes that should be written to the slave
              * @length number of bytes in the buffer to write
              *
-             * @return 0 on failure
+             * @return the actual number of bytes written or -1 on failure
              */
 		virtual int write(int address, char * data, int length) = 0;
 

@@ -76,7 +76,7 @@ namespace TRexLib{
      * @data buffer containing the bytes that should be written to the slave
      * @length number of bytes in the buffer to write
      *
-     * @return 0 on failure
+     * @return the actual number of bytes written or -1 on failure
      */
     int MyI2C::write(int address, char * data, int length)
     {
@@ -85,7 +85,21 @@ namespace TRexLib{
             Using the write function would lead to a recursive call and a stack overflow.
         */
 
-        return (pi_i2c_write(this->handle, data, length) != length);
+        int bytes_written = 0;
+        int total_bytes_written = 0;
+
+        do {
+            bytes_written = pi_i2c_write(this->handle, data+total_bytes_written, length-total_bytes_written);
+            if (bytes_written != -1) {
+                total_bytes_written += bytes_written;
+            }
+        } while (bytes_written != -1 && total_bytes_written < length);
+
+        if (bytes_written != -1) {
+            return total_bytes_written;
+        } else {
+            return bytes_written;
+        }
     }
 
     /*
