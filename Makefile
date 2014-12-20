@@ -4,9 +4,10 @@ BINPATH=/home/nico/buildroot/output/host/usr/bin/arm-buildroot-linux-uclibcgnuea
 CC=g++
 
 # Compiler flags
-CFLAGS  = -Wall -Wno-write-strings
+CFLAGS  = -Wall -Wno-write-strings -O
   #  -Wall turns on most, but not all, compiler warnings
   # -Wno-write-strings suppresses warning: deprecated conversion from string constant to ‘char*’
+  # -O because of the use of inline functions, you *have* to use '-O' or some variation when you compile your program! (source: http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/i2c/dev-interface)
 
 
 all: clean I2C.o MyI2C.o wait.o Serial.o StatusDataPacket.o CommandDataPacket.o MyStatusDataPacket.o MyCommandDataPacket.o TRex.o MyTRex.o TcpDaemon.o main.o 
