@@ -85,21 +85,7 @@ namespace TRexLib{
             Using the write function would lead to a recursive call and a stack overflow.
         */
 
-        int bytes_written = 0;
-        int total_bytes_written = 0;
-
-        do {
-            bytes_written = pi_i2c_write(this->handle, data+total_bytes_written, length-total_bytes_written);
-            if (bytes_written != -1) {
-                total_bytes_written += bytes_written;
-            }
-        } while (bytes_written != -1 && total_bytes_written < length);
-
-        if (bytes_written != -1) {
-            return total_bytes_written;
-        } else {
-            return bytes_written;
-        }
+        return pi_i2c_write(this->handle, data, length);
     }
 
     /*
@@ -118,20 +104,6 @@ namespace TRexLib{
             Using the read function would lead to a recursive call and a stack overflow.
         */
 
-        int bytes_read = 0;
-        int total_bytes_read = 0;
-
-        do {
-            bytes_read = pi_i2c_read(this->handle, data+total_bytes_read, length-total_bytes_read);
-            if (bytes_read != -1) {
-                total_bytes_read += bytes_read;
-            }
-        } while (bytes_read != -1 && total_bytes_read < length);
-
-        if (bytes_read != -1) {
-            return total_bytes_read;
-        } else {
-            return bytes_read;
-        }
+        return pi_i2c_read(this->handle, data, length);
     }
 }
