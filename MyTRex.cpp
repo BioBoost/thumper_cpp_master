@@ -1,5 +1,6 @@
 #include "MyTRex.h"
 #include "wait.h"
+#include "Log.h"
 
 namespace TRexLib{
 
@@ -30,14 +31,14 @@ namespace TRexLib{
             }
             result = i2c->read(this->i2cAddress, buffer, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
             wait(0.02);
-        } while (++i < 5 && (result != StatusDataPacket::SIZE_STATUS_DATA_PACKET || buffer[STATUS_START] != 0x0F));
+        } while (++i < I2C_RETRIES && (result != StatusDataPacket::SIZE_STATUS_DATA_PACKET || buffer[STATUS_START] != 0x0F));
 
-        if (i < 5) {
+        if (i < I2C_RETRIES) {
             // Parse status data from the received buffer
             status->fromTRex(buffer);
         }
 
-        return (i < 5);
+        return (i < I2C_RETRIES);
     }
 
     /*
@@ -48,6 +49,20 @@ namespace TRexLib{
      * @return true if the write action was successful
      */
     bool MyTRex::writeCommand(CommandDataPacket * command){
-        return false;
+        char buffer[CommandDataPacket::SIZE_TREX_DATA_PACKET];
+        int i = 0;
+        int result = 0;
+
+        // Write to TRex
+        command->toTRex(buffer);
+        do {
+            if (i > 0) {
+                Log::d("Writing command %dth time\r\n. Result = %d", i, result);
+            }
+            result = i2c->write(this->i2cAddress, buffer, CommandDataPacket::SIZE_TREX_DATA_PACKET);
+            wait(0.02);            
+        } while (++i < I2C_RETRIES && result != CommandDataPacket::SIZE_TREX_DATA_PACKET);
+
+        return (i < I2C_RETRIES);
     }
 }

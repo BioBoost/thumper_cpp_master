@@ -6,6 +6,9 @@
 namespace TRexLib{
 
     class MyTRex: public TRex{
+        private:
+            const static int I2C_RETRIES = 5;
+
         public:
             /*
              * Constructor
