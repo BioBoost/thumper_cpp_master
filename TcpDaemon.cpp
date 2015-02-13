@@ -15,7 +15,11 @@
 using namespace rapidjson;
 using namespace std;
 
+// Incomming message end
 #define END_MSG_SEQUENCE "\r\n\r\n"
+
+// Outgoing message end
+#define END_STATUS_SEQUENCE "\r\n"
 
 namespace TRexLib{
     /*
@@ -153,6 +157,7 @@ namespace TRexLib{
                             // Get the json string and send it to the client
                             const char * status_result = status.toJSON().c_str();
                             write(client_sock, status_result, strlen(status_result));
+                            write(client_sock, END_STATUS_SEQUENCE, strlen(END_STATUS_SEQUENCE));   // Indicate end
                             Log::d("Read status from TRex: %s\r\n", status_result);
                         } else {
                             Log::e("Status read failed\r\n");
