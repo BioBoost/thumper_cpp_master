@@ -143,6 +143,9 @@ namespace TRexLib{
                             } else {
                                 Log::e("Command send to Trex failed\r\n");
                             }
+
+                            // Wait some time
+                            wait(0.02);
                         }
 
                         // Read the status of the device
