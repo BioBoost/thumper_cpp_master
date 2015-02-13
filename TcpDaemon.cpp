@@ -149,7 +149,7 @@ namespace TRexLib{
                             }
 
                             // Wait some time
-                            wait(0.02);
+                            wait(0.05);
                         }
 
                         // Read the status of the device

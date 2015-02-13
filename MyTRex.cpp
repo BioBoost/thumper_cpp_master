@@ -28,7 +28,7 @@ namespace TRexLib{
         int result;
         do {
             if (i > 0) {
-                Log::d("Reading status %dth time\r\n. Result = %d", i, result);
+                Log::d("Reading status %dth time. Result = %d\r\n", i, result);
             }
             result = i2c->read(this->i2cAddress, buffer, StatusDataPacket::SIZE_STATUS_DATA_PACKET);
             wait(I2C_DELAY);
@@ -58,7 +58,7 @@ namespace TRexLib{
         command->toTRex(buffer);
         do {
             if (i > 0) {
-                Log::d("Writing command %dth time\r\n. Result = %d", i, result);
+                Log::d("Writing command %dth time. Result = %d\r\n", i, result);
             }
             result = i2c->write(this->i2cAddress, buffer, CommandDataPacket::SIZE_TREX_DATA_PACKET);
             wait(I2C_DELAY);            
